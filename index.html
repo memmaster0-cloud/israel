@@ -1,25 +1,111 @@
-html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Моя первая страница</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        h1 {
-            color: #0066cc;
-        }
-    </style>
+    <title>Регистрация</title>
 </head>
+
 <body>
+
     <h1>Слава Нетаньяху</h1>
     <p>Это моя первая веб-страница, созданная в рамках лабораторной работы.</p>
     <p>Во имя Израиля.</p>
+
+    <hr>
+
+    <h1>Регистрация</h1>
+
+    <form id="register-form">
+        <div>
+            <label for="name">Имя:</label>
+            <input type="text" id="name" name="name">
+            <span id="name-error"></span>
+        </div>
+
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+            <span id="email-error"></span>
+        </div>
+
+        <div>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password">
+            <span id="password-error"></span>
+        </div>
+
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+
+    <h2>Список зарегистрированных (демо)</h2>
+
+    <ul id="user-list">
+        <li>demo@example.com (демо)</li>
+    </ul>
+
+    <script>
+        function validateForm(name, email, password) {
+            document.getElementById("name-error").textContent = "";
+            document.getElementById("email-error").textContent = "";
+            document.getElementById("password-error").textContent = "";
+
+            let isValid = true;
+
+            if (!name || name.trim() === "") {
+                document.getElementById("name-error").textContent = " Имя обязательно";
+                isValid = false;
+            }
+
+            if (!email || email.indexOf("@") === -1 || email.indexOf(".") === -1) {
+                document.getElementById("email-error").textContent = " Некорректный email";
+                isValid = false;
+            }
+
+            if (!password || password.length < 6) {
+                document.getElementById("password-error").textContent = " Пароль не менее 6 символов";
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function addDeleteHandler(item) {
+            item.addEventListener("click", function () {
+                this.remove();
+            });
+        }
+
+        let existingItems = document.querySelectorAll("#user-list li");
+        existingItems.forEach(addDeleteHandler);
+
+        let form = document.getElementById("register-form");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            console.log("Значение имени:", name);
+
+            if (!validateForm(name, email, password)) {
+                return;
+            }
+
+            let userList = document.getElementById("user-list");
+            let listItem = document.createElement("li");
+
+            listItem.textContent = name + " (" + email + ")";
+            addDeleteHandler(listItem);
+            userList.appendChild(listItem);
+
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("password").value = "";
+        });
+    </script>
+
 </body>
 </html>
